@@ -1,0 +1,6 @@
+{
+  "name": "KVB",
+  "description": "KVB OS - O Sistema Operacional Empresarial Supremo: HubSpot, ClickUp, Notion, Monday, GoHighLevel, N8N e ChatGPT integrados em uma única plataforma milionária.",
+  "requestFramePermissions": [],
+  "majorCapabilities": ["MAJOR_CAPABILITY_SERVER_SIDE_GEMINI_API"]
+}
