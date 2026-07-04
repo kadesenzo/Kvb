@@ -550,7 +550,7 @@ export default function PublicWebsiteView({ onLoginSuccess, users, companies }: 
                 K
               </div>
               <div>
-                <h1 className="text-sm font-black tracking-tight leading-none">KVB System</h1>
+                <h1 className="text-sm font-black tracking-tight leading-none">KVB SYSTEM</h1>
                 <span className={`text-[8px] font-mono font-bold uppercase tracking-widest block mt-0.5 ${
                   isIosDark ? 'text-slate-400' : 'text-slate-500'
                 }`}>iOS 26 Architecture</span>

@@ -588,7 +588,7 @@ export default function App() {
       <header className="md:hidden bg-white border-b border-slate-200 text-slate-800 px-4 py-3 flex items-center justify-between sticky top-0 z-40 shadow-sm">
         <div className="flex items-center gap-2">
           <div className="w-8 h-8 bg-indigo-600 rounded flex items-center justify-center text-white font-bold text-sm">K</div>
-          <span className="text-xs font-bold text-slate-800 font-sans tracking-wide">KVB System ERP</span>
+          <span className="text-xs font-bold text-slate-800 font-sans tracking-wide">KVB SYSTEM</span>
         </div>
         <button 
           onClick={() => setIsSidebarOpen(!isSidebarOpen)}
@@ -611,8 +611,8 @@ export default function App() {
               K
             </div>
             <div>
-              <h1 className="text-sm font-extrabold text-slate-800 tracking-tight">KVB</h1>
-              <p className="text-[10px] text-slate-400 font-bold uppercase tracking-widest">ERP + CRM Agency</p>
+              <h1 className="text-sm font-extrabold text-slate-800 tracking-tight">KVB SYSTEM</h1>
+              <p className="text-[10px] text-slate-400 font-bold uppercase tracking-widest">OS EXCLUSIVE</p>
             </div>
           </div>
 
