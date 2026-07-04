@@ -39,7 +39,9 @@ import {
 } from 'lucide-react';
 
 interface PublicWebsiteViewProps {
-  onLoginSuccess: (tenant: string, role: string) => void;
+  onLoginSuccess: (tenant: string, role: string, userName: string) => void;
+  users: any[];
+  companies: any[];
 }
 
 interface Session {
@@ -334,7 +336,7 @@ const translations = {
   }
 };
 
-export default function PublicWebsiteView({ onLoginSuccess }: PublicWebsiteViewProps) {
+export default function PublicWebsiteView({ onLoginSuccess, users, companies }: PublicWebsiteViewProps) {
   // Navigation & Page states
   const [activeSection, setActiveSection] = useState('home');
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
@@ -437,9 +439,17 @@ export default function PublicWebsiteView({ onLoginSuccess }: PublicWebsiteViewP
     setLoginError('');
 
     setTimeout(() => {
-      if (password === 'enZo1234') {
+      const matchedUser = users.find(u => 
+        (u.email?.toLowerCase() === username.toLowerCase() || u.login?.toLowerCase() === username.toLowerCase()) && 
+        (u.password === password)
+      );
+
+      if (matchedUser) {
         setIsSubmitting(false);
         setFailedAttempts(0);
+        
+        const company = companies.find(c => c.id === matchedUser.companyId);
+        const companyName = company ? company.name : 'KVB';
         
         if (restrictByTime) {
           const now = new Date();
@@ -459,7 +469,7 @@ export default function PublicWebsiteView({ onLoginSuccess }: PublicWebsiteViewP
         }
 
         setIsLoginModalOpen(false);
-        onLoginSuccess(selectedTenant, selectedRole);
+        onLoginSuccess(companyName, matchedUser.role, matchedUser.name);
       } else {
         setIsSubmitting(false);
         const nextAttempts = failedAttempts + 1;
@@ -478,7 +488,7 @@ export default function PublicWebsiteView({ onLoginSuccess }: PublicWebsiteViewP
           setLockoutCountdown(30);
           setLoginError('Múltiplas tentativas incorretas. Login bloqueado por 30 segundos.');
         } else {
-          setLoginError(`Senha incorreta! Tentativa ${nextAttempts} de 3.`);
+          setLoginError(`Credenciais incorretas! Tentativa ${nextAttempts} de 3.`);
         }
       }
     }, 1200);
@@ -491,9 +501,12 @@ export default function PublicWebsiteView({ onLoginSuccess }: PublicWebsiteViewP
 
     setTimeout(() => {
       setIsSubmitting(false);
+      const matchedUser = users.find(u => u.email?.toLowerCase() === username.toLowerCase() || u.login?.toLowerCase() === username.toLowerCase());
       if (verificationCode === '123456' || verificationCode === 'enZo1234' || verificationCode.length >= 4) {
         setIsLoginModalOpen(false);
-        onLoginSuccess(selectedTenant, selectedRole);
+        const company = companies.find(c => c.id === matchedUser?.companyId);
+        const companyName = company ? company.name : 'KVB';
+        onLoginSuccess(companyName, matchedUser?.role || 'Administrador', matchedUser?.name || 'Carlos Dev');
       } else {
         setLoginError('Código de autenticação incorreto!');
       }
@@ -1089,36 +1102,6 @@ export default function PublicWebsiteView({ onLoginSuccess }: PublicWebsiteViewP
               {/* STAGE 1: ENTER CREDENTIALS */}
               {authState === 'credentials' && (
                 <form onSubmit={handleLoginSubmit} className="space-y-4">
-                  <div className="space-y-1.5">
-                    <label className="font-bold block opacity-75">{t('tenantLabel')}</label>
-                    <select 
-                      value={selectedTenant}
-                      onChange={e => setSelectedTenant(e.target.value)}
-                      className={`w-full p-2.5 rounded-xl border font-bold text-xs ${
-                        isIosDark ? 'bg-slate-950 border-slate-800 text-white' : 'bg-slate-50 border-slate-200 text-black'
-                      }`}
-                    >
-                      <option value="KVB">🏢 KVB (Admin)</option>
-                    </select>
-                  </div>
-
-                  <div className="space-y-1.5">
-                    <label className="font-bold block opacity-75">{t('roleLabel')}</label>
-                    <select 
-                      value={selectedRole}
-                      onChange={e => setSelectedRole(e.target.value)}
-                      className={`w-full p-2.5 rounded-xl border font-bold text-xs ${
-                        isIosDark ? 'bg-slate-950 border-slate-800 text-white' : 'bg-slate-50 border-slate-200 text-black'
-                      }`}
-                    >
-                      <option value="Administrador">👑 Administrador (Acesso Total)</option>
-                      <option value="Sócio">🤝 Sócio (Negócios & Financ.)</option>
-                      <option value="Gerente">💼 Gerente (Operação/CRM)</option>
-                      <option value="Marketing">📣 Marketing (Ativos/Post)</option>
-                      <option value="Vendedor">💰 Vendedor (Leads/Deal)</option>
-                      <option value="Funcionário">👷 Funcionário (Tarefas/Portal)</option>
-                    </select>
-                  </div>
 
                   <div className="space-y-1.5">
                     <label className="font-bold block opacity-75">{t('userLabel')}</label>

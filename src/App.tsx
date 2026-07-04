@@ -35,6 +35,7 @@ import FranchiseView from './components/FranchiseView';
 import AprenderView from './components/AprenderView';
 import IntelligenceView from './components/IntelligenceView';
 import PublicWebsiteView from './components/PublicWebsiteView';
+import BackupView from './components/BackupView';
 
 // Standard layout assets
 import { 
@@ -57,6 +58,7 @@ import {
   Palette,
   TrendingUp,
   Cpu,
+  Database,
   ShoppingBag,
   Network,
   BookOpen,
@@ -100,19 +102,40 @@ export default function App() {
   const [currentTenant, setCurrentTenant] = useState<string>('KVB');
   const [currentUserRole, setCurrentUserRole] = useState<string>('Administrador');
   const [currentDomain, setCurrentDomain] = useState<string>('app.kvbsystem.com.br');
+  const [currentLoggedUser, setCurrentLoggedUser] = useState<string>('Carlos Dev');
+
+  const [companies, setCompanies] = useState([
+    { id: 'tenant-4', name: 'KVB', tradeName: 'KVB', legalName: 'KVB Negócios Digitais e Software LTDA', cnpj: '10.222.333/0001-00', niche: 'Empresas de tecnologia', email: 'contato@kvbsystem.com.br', whatsapp: '(11) 90000-0000', phone: '(11) 4004-0000', address: 'Faria Lima, 3500', city: 'São Paulo', state: 'SP', cep: '04538-133', website: 'www.kvbsystem.com.br', socialMedia: '@kvb.system', plan: 'Enterprise', createdAt: '01/01/2026', status: 'Ativo' },
+    { id: 'tenant-1', name: 'Restaurante do João', tradeName: 'Restaurante do João', legalName: 'João Alimentação LTDA', cnpj: '20.111.222/0001-33', niche: 'Alimentação / Restaurantes', email: 'joao@restaurantejoao.com', whatsapp: '(11) 98888-8888', phone: '(11) 3333-4444', address: 'Av. Paulista, 1000', city: 'São Paulo', state: 'SP', cep: '01311-100', website: 'www.saboresdojoao.com.br', socialMedia: '@saboresdojoao', plan: 'Business', createdAt: '15/03/2026', status: 'Ativo' },
+    { id: 'tenant-2', name: 'Clínica OdontoSilva', tradeName: 'OdontoSilva', legalName: 'Odonto Silva Serviços Médicos S/S', cnpj: '30.444.555/0001-44', niche: 'Saúde & Estética', email: 'contato@odontosilva.com.br', whatsapp: '(21) 97777-7777', phone: '(21) 2222-3333', address: 'Rua das Flores, 500', city: 'Rio de Janeiro', state: 'RJ', cep: '22000-000', website: 'www.odontosilva.com.br', socialMedia: '@odontosilva', plan: 'Pro', createdAt: '10/04/2026', status: 'Ativo' },
+    { id: 'tenant-3', name: 'Academia FitLife', tradeName: 'FitLife', legalName: 'FitLife Fitness Center LTDA', cnpj: '40.666.777/0001-55', niche: 'Fitness & Bem-Estar', email: 'contato@fitlife.com.br', whatsapp: '(31) 96666-6666', phone: '(31) 5555-6666', address: 'Av. do Contorno, 8000', city: 'Belo Horizonte', state: 'MG', cep: '30110-010', website: 'www.fitlife.com.br', socialMedia: '@fitlife.academia', plan: 'Starter', createdAt: '05/05/2026', status: 'Ativo' }
+  ]);
+
+  const [users, setUsers] = useState([
+    { id: 'usr-1', name: 'Carlos Dev', photo: 'https://images.unsplash.com/photo-1535713875002-d1d0cf377fde?w=100', role: 'Administrador', department: 'Tecnologia', email: 'admin@kvb.com', phone: '(11) 91111-2222', login: 'carlos.dev', password: 'enZo1234', lastAccess: 'Hoje às 18:22', status: 'Ativo', companyId: 'tenant-4' },
+    { id: 'usr-2', name: 'João Admin', photo: 'https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?w=100', role: 'Administrador', department: 'Gestão', email: 'joao@saboresdojoao.com', phone: '(11) 98888-8888', login: 'joao.admin', password: 'joaoPassword123', lastAccess: 'Nunca', status: 'Ativo', companyId: 'tenant-1' },
+    { id: 'usr-3', name: 'Dra. Ana Silva', photo: 'https://images.unsplash.com/photo-1494790108377-be9c29b29330?w=100', role: 'Administrador', department: 'Clínica', email: 'ana@odontosilva.com.br', phone: '(21) 97777-7777', login: 'ana.silva', password: 'anaPassword123', lastAccess: 'Nunca', status: 'Ativo', companyId: 'tenant-2' },
+    { id: 'usr-4', name: 'Rodrigo Fit', photo: 'https://images.unsplash.com/photo-1500648767791-00dcc994a43e?w=100', role: 'Administrador', department: 'Treino', email: 'contato@fitlife.com.br', phone: '(31) 96666-6666', login: 'rodrigo.fit', password: 'rodrigoPassword123', lastAccess: 'Nunca', status: 'Ativo', companyId: 'tenant-3' }
+  ]);
 
   const [tenantModules, setTenantModules] = useState<Record<string, string[]>>({
-    'KVB': ['intelligence', 'dashboard', 'crm', 'deals', 'finance', 'kanban', 'staff', 'franchise', 'internal-chat', 'portal', 'generator', 'chat', 'design', 'traffic', 'automation', 'notif', 'university', 'aprender', 'store', 'signatures', 'library']
+    'KVB': ['intelligence', 'dashboard', 'crm', 'deals', 'finance', 'kanban', 'staff', 'franchise', 'internal-chat', 'portal', 'generator', 'chat', 'design', 'traffic', 'automation', 'notif', 'university', 'aprender', 'store', 'signatures', 'library'],
+    'Restaurante do João': ['dashboard', 'crm', 'deals', 'finance', 'kanban', 'staff', 'internal-chat', 'portal', 'generator', 'chat', 'design', 'traffic', 'automation', 'notif', 'university', 'aprender', 'store', 'signatures', 'library'],
+    'Clínica OdontoSilva': ['dashboard', 'crm', 'deals', 'finance', 'kanban', 'staff', 'internal-chat', 'portal', 'generator', 'chat', 'design', 'traffic', 'automation', 'notif', 'university', 'aprender', 'store', 'signatures', 'library'],
+    'Academia FitLife': ['dashboard', 'crm', 'deals', 'finance', 'kanban', 'staff', 'internal-chat', 'portal', 'generator', 'chat', 'design', 'traffic', 'automation', 'notif', 'university', 'aprender', 'store', 'signatures', 'library']
   });
 
   const [tenantPlans, setTenantPlans] = useState<Record<string, 'Starter' | 'Pro' | 'Business' | 'Enterprise'>>({
-    'KVB': 'Enterprise'
+    'KVB': 'Enterprise',
+    'Restaurante do João': 'Business',
+    'Clínica OdontoSilva': 'Pro',
+    'Academia FitLife': 'Starter'
   });
 
   const [rolePermissions, setRolePermissions] = useState<Record<string, string[]>>({
-    Administrador: ['intelligence', 'dashboard', 'crm', 'deals', 'finance', 'kanban', 'staff', 'franchise', 'internal-chat', 'portal', 'generator', 'chat', 'design', 'traffic', 'automation', 'notif', 'university', 'aprender', 'store', 'signatures', 'library'],
-    Sócio: ['dashboard', 'crm', 'deals', 'finance', 'kanban', 'staff', 'internal-chat', 'portal', 'generator', 'chat', 'design', 'traffic', 'automation', 'notif', 'university', 'aprender', 'store', 'library'],
-    Gerente: ['crm', 'deals', 'kanban', 'internal-chat', 'portal', 'generator', 'chat', 'design', 'traffic', 'automation', 'notif', 'university', 'aprender', 'store', 'library'],
+    Administrador: ['intelligence', 'dashboard', 'crm', 'deals', 'finance', 'kanban', 'staff', 'franchise', 'internal-chat', 'portal', 'generator', 'chat', 'design', 'traffic', 'automation', 'notif', 'university', 'aprender', 'store', 'signatures', 'library', 'backup'],
+    Sócio: ['dashboard', 'crm', 'deals', 'finance', 'kanban', 'staff', 'internal-chat', 'portal', 'generator', 'chat', 'design', 'traffic', 'automation', 'notif', 'university', 'aprender', 'store', 'library', 'backup'],
+    Gerente: ['crm', 'deals', 'kanban', 'internal-chat', 'portal', 'generator', 'chat', 'design', 'traffic', 'automation', 'notif', 'university', 'aprender', 'store', 'library', 'backup'],
     Funcionário: ['kanban', 'internal-chat', 'portal', 'university', 'aprender', 'store', 'library'],
     Marketing: ['generator', 'chat', 'design', 'traffic', 'automation', 'notif', 'internal-chat', 'portal', 'university', 'aprender', 'store', 'library'],
     Vendedor: ['crm', 'deals', 'internal-chat', 'portal', 'university', 'aprender', 'store', 'library']
@@ -155,7 +178,7 @@ export default function App() {
     if (tenant !== 'KVB') {
       const activeModules = tenantModules[tenant] || [];
       // Some tabs are core and always active for management/operations
-      const coreTabs = ['staff', 'dashboard', 'portal', 'university', 'aprender'];
+      const coreTabs = ['staff', 'dashboard', 'portal', 'university', 'aprender', 'backup'];
       if (!coreTabs.includes(tabId) && !activeModules.includes(tabId)) {
         return false;
       }
@@ -195,6 +218,41 @@ export default function App() {
   useEffect(() => {
     fetchAllData();
   }, []);
+
+  const handleExportData = () => {
+    return {
+      currentTenant,
+      currentUserRole,
+      currentLoggedUser,
+      clients,
+      services,
+      meetings,
+      contracts,
+      tasks,
+      tickets,
+      projects,
+      finance,
+      activityLogs,
+      companies,
+      users
+    };
+  };
+
+  const handleRestoreData = (backupData: any) => {
+    if (backupData.clients) setClients(backupData.clients);
+    if (backupData.services) setServices(backupData.services);
+    if (backupData.meetings) setMeetings(backupData.meetings);
+    if (backupData.contracts) setContracts(backupData.contracts);
+    if (backupData.tasks) setTasks(backupData.tasks);
+    if (backupData.tickets) setTickets(backupData.tickets);
+    if (backupData.projects) setProjects(backupData.projects);
+    if (backupData.finance) setFinance(backupData.finance);
+    if (backupData.activityLogs) setActivityLogs(backupData.activityLogs);
+    if (backupData.companies) setCompanies(backupData.companies);
+    if (backupData.users) setUsers(backupData.users);
+    
+    addLog(`Restaurou banco de dados completo via Backup Seguro.`);
+  };
 
   // --- RECTIVE HANDLERS SYNCING DIRECTLY ON CONTROLLERS ENDPOINTS ---
 
@@ -471,6 +529,7 @@ export default function App() {
       title: "KVB CLIENTES (Externo)",
       items: [
         { id: 'portal', label: 'Área do Cliente (Simulador)', icon: <Laptop size={15} /> },
+        { id: 'backup', label: 'Cofre de Backups 🛡️', icon: <Database size={15} /> },
         { id: 'generator', label: 'Gerador IA', icon: <Sparkles size={15} />, isAi: true },
         { id: 'chat', label: 'Consultores IA', icon: <Bot size={15} />, isAi: true },
         { id: 'design', label: 'Área de Design', icon: <Palette size={15} /> },
@@ -503,17 +562,20 @@ export default function App() {
   if (viewMode === 'website') {
     return (
       <PublicWebsiteView 
-        onLoginSuccess={(tenant, role) => {
+        users={users}
+        companies={companies}
+        onLoginSuccess={(tenant, role, userName) => {
           setCurrentTenant(tenant);
           setCurrentUserRole(role);
+          setCurrentLoggedUser(userName);
           setViewMode('app');
           // Set active tab default based on company type
-          if (tenant !== 'KVB Group HQ') {
+          if (tenant !== 'KVB') {
             setActiveTab('portal');
           } else {
             setActiveTab('intelligence');
           }
-          addLog(`Usuário realizou login com sucesso no Tenant ${tenant} como ${role}`);
+          addLog(`Usuário ${userName} realizou login com sucesso no Tenant ${tenant} como ${role}`);
         }}
       />
     );
@@ -555,59 +617,76 @@ export default function App() {
           </div>
 
           {/* Tenant Selector & Role Impersonator Block */}
-          <div className="bg-slate-50 border border-slate-200 rounded-xl p-3 space-y-2.5 shadow-xs">
-            <div>
-              <label className="text-[9px] font-black text-slate-400 uppercase tracking-wider font-mono block mb-1">Empresa Ativa (Tenant)</label>
-              <select 
-                value={currentTenant}
-                onChange={(e) => {
-                  const val = e.target.value;
-                  setCurrentTenant(val);
-                  addLog(`Alternou ambiente de dados para o Tenant: ${val}`);
-                  if (val === 'Restaurante do João') {
-                    setCurrentDomain('saboresdojoao.kvb.com');
-                  } else if (val === 'Clínica OdontoSilva') {
-                    setCurrentDomain('odontosilva.kvb.com');
-                  } else if (val === 'Academia FitLife') {
-                    setCurrentDomain('fitlife.kvb.com');
-                  } else {
-                    setCurrentDomain('app.kvbsystem.com.br');
-                  }
-                }}
-                className="w-full text-[10px] p-2 bg-white border border-slate-200 rounded-lg font-extrabold text-slate-800 focus:outline-none focus:ring-1 focus:ring-indigo-500 cursor-pointer"
-              >
-                <option value="KVB">🏢 KVB (Admin)</option>
-                <option value="Restaurante do João">🍔 Restaurante do João</option>
-                <option value="Clínica OdontoSilva">🦷 Clínica OdontoSilva</option>
-                <option value="Academia FitLife">🏋️ Academia FitLife</option>
-              </select>
-            </div>
+          {currentTenant === 'KVB' ? (
+            <div className="bg-slate-50 border border-slate-200 rounded-xl p-3 space-y-2.5 shadow-xs">
+              <div>
+                <label className="text-[9px] font-black text-slate-400 uppercase tracking-wider font-mono block mb-1">Empresa Ativa (Tenant)</label>
+                <select 
+                  value={currentTenant}
+                  onChange={(e) => {
+                    const val = e.target.value;
+                    setCurrentTenant(val);
+                    addLog(`Alternou ambiente de dados para o Tenant: ${val}`);
+                    if (val === 'Restaurante do João') {
+                      setCurrentDomain('saboresdojoao.kvb.com');
+                    } else if (val === 'Clínica OdontoSilva') {
+                      setCurrentDomain('odontosilva.kvb.com');
+                    } else if (val === 'Academia FitLife') {
+                      setCurrentDomain('fitlife.kvb.com');
+                    } else {
+                      setCurrentDomain('app.kvbsystem.com.br');
+                    }
+                  }}
+                  className="w-full text-[10px] p-2 bg-white border border-slate-200 rounded-lg font-extrabold text-slate-800 focus:outline-none focus:ring-1 focus:ring-indigo-500 cursor-pointer"
+                >
+                  <option value="KVB">🏢 KVB (Admin)</option>
+                  <option value="Restaurante do João">🍔 Restaurante do João</option>
+                  <option value="Clínica OdontoSilva">🦷 Clínica OdontoSilva</option>
+                  <option value="Academia FitLife">🏋️ Academia FitLife</option>
+                </select>
+              </div>
 
-            <div>
-              <label className="text-[9px] font-black text-slate-400 uppercase tracking-wider font-mono block mb-1">Simular Perfil / Permissão</label>
-              <select 
-                value={currentUserRole}
-                onChange={(e) => {
-                  const val = e.target.value;
-                  setCurrentUserRole(val);
-                  addLog(`Alternou perfil de usuário logado para: ${val}`);
-                }}
-                className="w-full text-[10px] p-2 bg-white border border-slate-200 rounded-lg font-extrabold text-slate-800 focus:outline-none focus:ring-1 focus:ring-indigo-500 cursor-pointer"
-              >
-                <option value="Administrador">👑 Administrador (Acesso Total)</option>
-                <option value="Sócio">🤝 Sócio (Negócios & Financ.)</option>
-                <option value="Gerente">💼 Gerente (Operação/CRM)</option>
-                <option value="Marketing">📣 Marketing (Ativos/Post)</option>
-                <option value="Vendedor">💰 Vendedor (Leads/Deal)</option>
-                <option value="Funcionário">👷 Funcionário (Tarefas/Portal)</option>
-              </select>
-            </div>
+              <div>
+                <label className="text-[9px] font-black text-slate-400 uppercase tracking-wider font-mono block mb-1">Simular Perfil / Permissão</label>
+                <select 
+                  value={currentUserRole}
+                  onChange={(e) => {
+                    const val = e.target.value;
+                    setCurrentUserRole(val);
+                    addLog(`Alternou perfil de usuário logado para: ${val}`);
+                  }}
+                  className="w-full text-[10px] p-2 bg-white border border-slate-200 rounded-lg font-extrabold text-slate-800 focus:outline-none focus:ring-1 focus:ring-indigo-500 cursor-pointer"
+                >
+                  <option value="Administrador">👑 Administrador (Acesso Total)</option>
+                  <option value="Sócio">🤝 Sócio (Negócios & Financ.)</option>
+                  <option value="Gerente">💼 Gerente (Operação/CRM)</option>
+                  <option value="Marketing">📣 Marketing (Ativos/Post)</option>
+                  <option value="Vendedor">💰 Vendedor (Leads/Deal)</option>
+                  <option value="Funcionário">👷 Funcionário (Tarefas/Portal)</option>
+                </select>
+              </div>
 
-            <div className="flex items-center justify-between text-[8px] font-mono text-slate-400 border-t border-slate-200 pt-1.5">
-              <span className="truncate max-w-[120px]" title={currentDomain}>{currentDomain}</span>
-              <span className="bg-indigo-50 text-indigo-600 px-1 py-0.5 rounded font-black scale-90">MULTI-TENANT</span>
+              <div className="flex items-center justify-between text-[8px] font-mono text-slate-400 border-t border-slate-200 pt-1.5">
+                <span className="truncate max-w-[120px]" title={currentDomain}>{currentDomain}</span>
+                <span className="bg-indigo-50 text-indigo-600 px-1 py-0.5 rounded font-black scale-90">MULTI-TENANT</span>
+              </div>
             </div>
-          </div>
+          ) : (
+            <div className="bg-slate-900 text-white rounded-xl p-3.5 space-y-2 border border-slate-800 shadow-xs">
+              <div className="flex items-center gap-1.5">
+                <div className="w-2 h-2 rounded-full bg-emerald-400 animate-pulse"></div>
+                <span className="text-[9px] font-black uppercase tracking-wider font-mono text-slate-400">Sessão Criptografada</span>
+              </div>
+              <div className="space-y-0.5">
+                <p className="text-[11px] font-black tracking-tight">{currentTenant}</p>
+                <p className="text-[9px] text-indigo-300 font-bold">{currentUserRole} • {currentLoggedUser}</p>
+              </div>
+              <div className="text-[8px] font-mono text-slate-400 border-t border-slate-800 pt-1.5 flex justify-between">
+                <span className="truncate max-w-[150px]">Host: {currentTenant === 'Restaurante do João' ? 'saboresdojoao.kvb.com' : currentTenant === 'Clínica OdontoSilva' ? 'odontosilva.kvb.com' : 'fitlife.kvb.com'}</span>
+                <span className="text-[7px] text-emerald-400 font-bold font-mono">LGPD</span>
+              </div>
+            </div>
+          )}
 
           {/* Secure Logout / Return Button */}
           <button
@@ -817,7 +896,7 @@ export default function App() {
 
             {activeTab === 'kanban' && (
               <KanbanView
-                tasks={tasks.filter(t => currentTenant === 'KVB Group HQ' || t.client === currentTenant)}
+                tasks={tasks.filter(t => currentTenant === 'KVB' || currentTenant === 'KVB Group HQ' || t.client === currentTenant)}
                 onAddTask={handleAddTask}
                 onUpdateTask={handleUpdateTask}
                 onDeleteTask={handleDeleteTask}
@@ -826,10 +905,19 @@ export default function App() {
 
             {activeTab === 'portal' && (
               <ClientPortalView
-                clients={clients.filter(c => currentTenant === 'KVB Group HQ' || c.company === currentTenant || !c.company)}
+                clients={clients.filter(c => currentTenant === 'KVB' || currentTenant === 'KVB Group HQ' || c.company === currentTenant || !c.company)}
                 tickets={tickets}
                 onAddTicket={handleAddTicket}
                 onUpdateTicketStatus={handleUpdateTicketStatus}
+              />
+            )}
+
+            {activeTab === 'backup' && (
+              <BackupView
+                currentTenant={currentTenant}
+                currentUserRole={currentUserRole}
+                onExportData={handleExportData}
+                onRestoreData={handleRestoreData}
               />
             )}
 
